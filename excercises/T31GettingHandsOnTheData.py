@@ -4,6 +4,7 @@ from os.path import isfile, join
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from PIL import Image
 
 
@@ -59,7 +60,7 @@ def get_labels(N=55):
 # """ VISUALIZE THE DATA """
 def Visualize_data(X, y):
     ids_grass = np.where(y == 1)[0]  # for grass.
-    ids_not_grass = np.where(y == 0)[0] # for non-grass.
+    ids_not_grass = np.where(y == 0)[0]  # for non-grass.
 
     # Set figure size (width, height)
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -95,8 +96,8 @@ def Visualize_data(X, y):
     # axes[1].scatter(..., ..., c='b', marker ='o', label='Soil+Tiles')
     # YOUR CODE HERE
 
-    axes[1].scatter(greenness_grass, blueness_grass, c='g', marker ='x', label='Grass')
-    axes[1].scatter(greenness_not_grass, blueness_not_grass, c='b', marker ='o', label='Soil+Tiles')
+    axes[1].scatter(greenness_grass, blueness_grass, c='g', marker='x', label='Grass')
+    axes[1].scatter(greenness_not_grass, blueness_not_grass, c='b', marker='o', label='Soil+Tiles')
     axes[1].set_xlabel('Greenness of Images')
     axes[1].set_ylabel('Blueness of Images')
     axes[1].legend()
@@ -109,8 +110,8 @@ def Visualize_data(X, y):
     # axes[2].scatter(..., ..., c='b', marker ='o', label='Soil+Tiles')
     # YOUR CODE HERE
 
-    axes[2].scatter(redness_grass, blueness_grass, c='r', marker ='x', label='Grass')
-    axes[2].scatter(redness_not_grass, blueness_not_grass, c='b', marker ='o', label='Soil+Tiles')
+    axes[2].scatter(redness_grass, blueness_grass, c='r', marker='x', label='Grass')
+    axes[2].scatter(redness_not_grass, blueness_not_grass, c='b', marker='o', label='Soil+Tiles')
     axes[2].set_xlabel('Redness of Images')
     axes[2].set_ylabel('Blueness of Images')
     axes[2].legend()
@@ -121,6 +122,9 @@ def Visualize_data(X, y):
 
 X = get_feature_matrix()
 y = get_labels()
+
+pd.DataFrame(X).to_csv("feature_map.csv", header=["R", "G", "B"], index=False)
+pd.DataFrame(y).to_csv("labels.csv", header=["is_grass"], index=False)
 
 # Full Vector
 # Let s label : Grass = 1 , Soil = 0, Tiles = 0

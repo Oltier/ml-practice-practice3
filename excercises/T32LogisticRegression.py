@@ -1,5 +1,5 @@
 import numpy as np
-
+import pandas as pd
 
 def sigmoid_func(z):
     ### STUDENT TASK ###
@@ -40,6 +40,9 @@ def predict_output(X, w):
     raise NotImplementedError()
     return y
 
+
+X = np.array(pd.read_csv("feature_map.csv"))
+y = np.array(pd.read_csv("labels.csv"))
 
 # Execute this cell. Do not modify.
 step_size = 1e-5
