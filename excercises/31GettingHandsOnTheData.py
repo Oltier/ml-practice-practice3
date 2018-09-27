@@ -2,13 +2,14 @@ import re
 from os import listdir
 from os.path import isfile, join
 
-from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image
 
 
 def get_source_image_file_names(base_dir=""):
-    return [join(base_dir, f) for f in listdir(base_dir) if isfile(join(base_dir, f)) and re.match('image_[0-9]+\.jpg', f)]
+    return [join(base_dir, f) for f in listdir(base_dir) if
+            isfile(join(base_dir, f)) and re.match('image_[0-9]+\.jpg', f)]
 
 
 def convert_image_to_average_rgb(path):
@@ -19,8 +20,16 @@ def convert_image_to_average_rgb(path):
     data = np.asarray(rgb_im).reshape((pixel_no, 3))
     rgb_sum = data.sum(axis=0)
     rgb_average = rgb_sum / pixel_no
-    reshaped_rgb_average = rgb_average.reshape((1,3))
+    reshaped_rgb_average = rgb_average.reshape((1, 3))
     return reshaped_rgb_average
+
+
+def map_to_label(file_name):
+    id = re.search('[0-9]+', file_name)
+    if int(id[0]) <= 20:
+        return 1
+    else:
+        return 0
 
 
 def get_feature_matrix(N=55):
@@ -38,19 +47,19 @@ def get_feature_matrix(N=55):
 
 
 def get_labels(N=55):
-    y = np.zeros((N, 1));
     ### STUDENT TASK ###
     ## Generate the label vector, where 1 is a Grass image and 0 is Non-Grass.
     ## Hint: See the 2.Dataset-section where the picture order is defined.
     # YOUR CODE HERE
-    raise NotImplementedError()
+    image_sources = np.array(get_source_image_file_names("images"))
+    y = np.array(list(map(lambda img: map_to_label(img), image_sources))).reshape((N, 1))
     return y
 
 
 # """ VISUALIZE THE DATA """
 def Visualize_data(X, y):
-    indx_1 = np.where(y == 1)  # for grass.
-    indx_2 = np.where(y == 0)  # for non-grass.
+    ids_grass = np.where(y == 1)[0]  # for grass.
+    ids_not_grass = np.where(y == 0)[0] # for non-grass.
 
     # Set figure size (width, height)
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -61,7 +70,19 @@ def Visualize_data(X, y):
     # axes[0].scatter(...,..., c='g', marker ='x', label='Grass')
     # axes[0].scatter(...,..., c='r', marker ='o', label='Soil+Tiles')
     # YOUR CODE HERE
-    raise NotImplementedError()
+    redness = X[:, 0]
+    greenness = X[:, 1]
+    blueness = X[:, 2]
+
+    redness_grass = redness[ids_grass]
+    redness_not_grass = redness[ids_not_grass]
+    greenness_grass = greenness[ids_grass]
+    greenness_not_grass = greenness[ids_not_grass]
+    blueness_grass = blueness[ids_grass]
+    blueness_not_grass = blueness[ids_not_grass]
+
+    axes[0].scatter(greenness_grass, redness_grass, c='g', marker='x', label='Grass')
+    axes[0].scatter(greenness_not_grass, redness_not_grass, c='r', marker='o', label='Soil+Tiles')
     axes[0].set_xlabel('Greenness of Images')
     axes[0].set_ylabel('Redness of Images')
     axes[0].legend()
@@ -73,7 +94,9 @@ def Visualize_data(X, y):
     # axes[1].scatter(..., ..., c='g', marker ='x', label='Grass')
     # axes[1].scatter(..., ..., c='b', marker ='o', label='Soil+Tiles')
     # YOUR CODE HERE
-    raise NotImplementedError()
+
+    axes[1].scatter(greenness_grass, blueness_grass, c='g', marker ='x', label='Grass')
+    axes[1].scatter(greenness_not_grass, blueness_not_grass, c='b', marker ='o', label='Soil+Tiles')
     axes[1].set_xlabel('Greenness of Images')
     axes[1].set_ylabel('Blueness of Images')
     axes[1].legend()
@@ -85,7 +108,9 @@ def Visualize_data(X, y):
     # axes[2].scatter(..., ..., c='r', marker ='x', label='Grass')
     # axes[2].scatter(..., ..., c='b', marker ='o', label='Soil+Tiles')
     # YOUR CODE HERE
-    raise NotImplementedError()
+
+    axes[2].scatter(redness_grass, blueness_grass, c='r', marker ='x', label='Grass')
+    axes[2].scatter(redness_not_grass, blueness_not_grass, c='b', marker ='o', label='Soil+Tiles')
     axes[2].set_xlabel('Redness of Images')
     axes[2].set_ylabel('Blueness of Images')
     axes[2].legend()
@@ -101,3 +126,4 @@ y = get_labels()
 # Let s label : Grass = 1 , Soil = 0, Tiles = 0
 assert X.shape == (55, 3)
 axes = Visualize_data(X, y)
+plt.show()
