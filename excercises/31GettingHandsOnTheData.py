@@ -1,19 +1,40 @@
+import re
+from os import listdir
+from os.path import isfile, join
+
+from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 
 
+def get_source_image_file_names(base_dir=""):
+    return [join(base_dir, f) for f in listdir(base_dir) if isfile(join(base_dir, f)) and re.match('image_[0-9]+\.jpg', f)]
+
+
+def convert_image_to_average_rgb(path):
+    im = Image.open(path)
+    width, height = im.size
+    pixel_no = width * height
+    rgb_im = im.convert('RGB')
+    data = np.asarray(rgb_im).reshape((pixel_no, 3))
+    rgb_sum = data.sum(axis=0)
+    rgb_average = rgb_sum / pixel_no
+    reshaped_rgb_average = rgb_average.reshape((1,3))
+    return reshaped_rgb_average
+
+
 def get_feature_matrix(N=55):
     # initialize the feature vector with zeros.
-    x_vec = np.zeros((N, 3))
 
-    x = []
     ### STUDENT TASK ###
     ## Loop through each picture and each pixel and sum the RGB values into the feature vector matrix.
     ## At last, remember to divide each R, G and B sum with the total pixel count to get the average value.
     ## Hint: Most of the commands required for this task are in the 2.Dataset-section.
     # YOUR CODE HERE
-    raise NotImplementedError()
-    return x_vec;
+    image_sources = np.array(get_source_image_file_names("images"))
+    x_vec = np.array(list(map(lambda img: convert_image_to_average_rgb(img), image_sources))).reshape((N, 3))
+
+    return x_vec
 
 
 def get_labels(N=55):
@@ -73,8 +94,8 @@ def Visualize_data(X, y):
     return axes
 
 
-y = get_labels()
 X = get_feature_matrix()
+y = get_labels()
 
 # Full Vector
 # Let s label : Grass = 1 , Soil = 0, Tiles = 0
