@@ -25,9 +25,9 @@ def convert_image_to_average_rgb(path):
     return reshaped_rgb_average
 
 
-def map_to_label(file_name):
-    id = re.search('[0-9]+', file_name)
-    if int(id[0]) <= 20:
+def map_to_label(file_name, f):
+    img_id = int((re.search('[0-9]+', file_name))[0])
+    if f(img_id):
         return 1
     else:
         return 0
@@ -47,14 +47,34 @@ def get_feature_matrix(N=55):
     return x_vec
 
 
-def get_labels(N=55):
+def get_labels(N=55, k=0):
     ### STUDENT TASK ###
     ## Generate the label vector, where 1 is a Grass image and 0 is Non-Grass.
     ## Hint: See the 2.Dataset-section where the picture order is defined.
     # YOUR CODE HERE
+    if k == 0:
+        f = is_grass
+    elif k == 1:
+        f = is_soil
+    elif k == 2:
+        f = is_tile
+    else:
+        raise AttributeError("Invalid subproblem id")
     image_sources = np.array(get_source_image_file_names("images"))
-    y = np.array(list(map(lambda img: map_to_label(img), image_sources))).reshape((N, 1))
+    y = np.array(list(map(lambda img: map_to_label(img, f), image_sources))).reshape((N, 1))
     return y
+
+
+def is_grass(id):
+    return id <= 20
+
+
+def is_soil(id):
+    return 20 < id <= 40
+
+
+def is_tile(id):
+    return id > 40
 
 
 # """ VISUALIZE THE DATA """
@@ -121,7 +141,7 @@ def Visualize_data(X, y):
 
 
 X = get_feature_matrix()
-y = get_labels()
+y = get_labels(k=1)
 
 pd.DataFrame(X).to_csv("feature_map.csv", header=["R", "G", "B"], index=False)
 pd.DataFrame(y).to_csv("labels.csv", header=["is_grass"], index=False)
