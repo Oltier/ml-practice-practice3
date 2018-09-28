@@ -1,3 +1,4 @@
+sklearn
 Pillow
 numpy
 matplotlib
