@@ -50,4 +50,4 @@ y = np.array(pd.read_csv("labels.csv"))
 # Change best=None into step size from the list that provides the fastest converge. e.g best=1
 res0_1, axes = visualize_error(X / 255, y, best=16, step_sizes=[0.1, 0.5, 1, 5, 10, 16])
 # YOUR CODE HERE
-plt.show()
+# plt.show()

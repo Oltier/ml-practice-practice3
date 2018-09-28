@@ -150,4 +150,4 @@ pd.DataFrame(y).to_csv("labels.csv", header=["is_grass"], index=False)
 # Let s label : Grass = 1 , Soil = 0, Tiles = 0
 assert X.shape == (55, 3)
 axes = Visualize_data(X, y)
-plt.show()
+# plt.show()
