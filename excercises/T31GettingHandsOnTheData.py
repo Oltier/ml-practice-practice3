@@ -80,7 +80,7 @@ def is_tile(id):
 # """ VISUALIZE THE DATA """
 def Visualize_data(X, y):
     ids_grass = np.where(y == 1)[0]  # for grass.
-    ids_not_grass = np.where(y == 0)[0]  # for non-grass.
+    ids_not_grass = np.where(y == 0)[0] # for non-grass.
 
     # Set figure size (width, height)
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -91,16 +91,15 @@ def Visualize_data(X, y):
     # axes[0].scatter(...,..., c='g', marker ='x', label='Grass')
     # axes[0].scatter(...,..., c='r', marker ='o', label='Soil+Tiles')
     # YOUR CODE HERE
-    redness = X[:, 0]
-    greenness = X[:, 1]
-    blueness = X[:, 2]
+    grass = X[ids_grass]
+    not_grass = X[ids_not_grass]
 
-    redness_grass = redness[ids_grass]
-    redness_not_grass = redness[ids_not_grass]
-    greenness_grass = greenness[ids_grass]
-    greenness_not_grass = greenness[ids_not_grass]
-    blueness_grass = blueness[ids_grass]
-    blueness_not_grass = blueness[ids_not_grass]
+    redness_grass = grass[:, 0]
+    redness_not_grass = not_grass[:, 0]
+    greenness_grass = grass[:, 1]
+    greenness_not_grass = not_grass[:, 1]
+    blueness_grass = grass[:, 2]
+    blueness_not_grass = not_grass[:, 2]
 
     axes[0].scatter(greenness_grass, redness_grass, c='g', marker='x', label='Grass')
     axes[0].scatter(greenness_not_grass, redness_not_grass, c='r', marker='o', label='Soil+Tiles')
@@ -141,7 +140,7 @@ def Visualize_data(X, y):
 
 
 X = get_feature_matrix()
-y = get_labels(k=1)
+y = get_labels()
 
 pd.DataFrame(X).to_csv("feature_map.csv", header=["R", "G", "B"], index=False)
 pd.DataFrame(y).to_csv("labels.csv", header=["is_grass"], index=False)
