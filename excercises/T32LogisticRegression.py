@@ -15,9 +15,7 @@ def gradient(X, y, w):
     ### STUDENT TASK ###
     # grad = ...
     # YOUR CODE HERE
-    N = len(X)
-    f_deriv_w = ((sigmoid_func(inner1d(w.T, X)[:, np.newaxis]) - y) * X).sum(axis=0).reshape((len(w), 1))
-    grad = f_deriv_w / N
+    grad = ((sigmoid_func(inner1d(w.T, X)[:, np.newaxis]) - y) * X).mean(axis=0).reshape((len(w), 1))
     return grad
 
 
@@ -25,16 +23,15 @@ def empirical_risk(X, y, w):
     N = len(X)
     f_1 = (-y) * np.log(sigmoid_func(inner1d(w.T, X)[:, np.newaxis]))
     f_2 = (1 - y) * np.log(1 - sigmoid_func(inner1d(w.T, X)[:, np.newaxis]))
-    f = (f_1 - f_2).sum(axis=0)
-    empirical_error = f / N
+    empirical_error = (f_1 - f_2).mean(axis=0)
     return empirical_error
 
 
 def logisticRegression_func(X, y, step_size, K):
-    N = X.shape[0]
-    d = X.shape[1]
+    N = X.shape[1]
+    d = y.shape[1]
     # Initialize w as 1xd array.
-    w = np.zeros((X.shape[1], y.shape[1]))
+    w = np.zeros((N, d))
     loss_list = []
     for i in range(K):
         ### STUDENT TASK ###

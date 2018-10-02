@@ -7,8 +7,7 @@ from excercises.T32LogisticRegression import logisticRegression_func, predict_ou
 def calculate_accuracy(y, y_hat):
     ### STUDENT TASK ###
     # YOUR CODE HERE
-    N = len(y)
-    accuracy = np.sum(y == y_hat) / N
+    accuracy = np.mean(y == y_hat)
     return accuracy
 
 

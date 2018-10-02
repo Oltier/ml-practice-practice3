@@ -19,8 +19,8 @@ def convert_image_to_average_rgb(path):
     pixel_no = width * height
     rgb_im = im.convert('RGB')
     data = np.asarray(rgb_im).reshape((pixel_no, 3))
-    rgb_sum = data.sum(axis=0)
-    rgb_average = rgb_sum / pixel_no
+    rgb_average = data.mean(axis=0)
+    # rgb_average = rgb_sum / pixel_no
     reshaped_rgb_average = rgb_average.reshape((1, 3))
     return reshaped_rgb_average
 
